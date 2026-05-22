@@ -3,76 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MedManager (Local Only)</title>
+    <title>MedManager Pro</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <style>
-        :root { --primary: #007aff; --bg: #f2f2f7; --card: #ffffff; --border: #d1d1d6; }
+        :root { --primary: #007aff; --success: #34c759; --bg: #f2f2f7; --card: #ffffff; --border: #d1d1d6; }
         body { font-family: -apple-system, system-ui; background: var(--bg); margin: 0; padding-bottom: 100px; }
         
-        .sticky-header { 
-            position: sticky; top: 0; background: rgba(255,255,255,0.9); 
-            backdrop-filter: blur(10px); z-index: 100; border-bottom: 0.5px solid var(--border);
-            padding: 10px 15px;
-        }
+        /* 顶部与导航 */
+        .sticky-header { position: sticky; top: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); z-index: 100; border-bottom: 0.5px solid var(--border); padding: 10px 15px; }
         .search-row { display: flex; gap: 10px; align-items: center; }
-        .search-bar {
-            flex: 1; border: none; background: #e3e3e8; padding: 8px 12px;
-            border-radius: 10px; font-size: 16px; outline: none;
-        }
+        .search-bar { flex: 1; border: none; background: #e3e3e8; padding: 8px 12px; border-radius: 10px; font-size: 16px; outline: none; }
 
-        .view-tabs { display: flex; padding: 10px 15px; gap: 10px; }
-        .tab { flex: 1; padding: 8px; text-align: center; background: #ddd; border-radius: 8px; font-size: 14px; }
+        .view-tabs { display: flex; padding: 10px 15px; gap: 5px; overflow-x: auto; }
+        .tab { flex: none; padding: 8px 15px; background: #ddd; border-radius: 20px; font-size: 13px; white-space: nowrap; }
         .tab.active { background: var(--primary); color: white; }
 
-        /* 隐私保护样式 */
-        .private-blur { filter: blur(5px); transition: 0.3s; }
-        .private-blur:active { filter: blur(0); } /* 点击时临时显示 */
-
+        /* 通用组件 */
+        .private-blur { filter: blur(5px); }
         .patient-list { padding: 10px; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .card-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .bed-tag { background: #5856d6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+        
+        /* 任务样式 */
+        .todo-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 0.5px solid #eee; }
+        .todo-item.done { opacity: 0.5; text-decoration: line-through; }
+        .todo-text { flex: 1; font-size: 15px; }
+        .todo-meta { font-size: 11px; color: #888; }
+        .check-box { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .check-box.checked { background: var(--primary); color: white; }
+        .check-box.checked::after { content: '✓'; font-weight: bold; }
 
-        .table-container { overflow-x: auto; background: white; margin: 10px; border-radius: 8px; display: none; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }
-        th, td { border: 0.5px solid #eee; padding: 8px; text-align: left; }
-
+        /* 模态框与输入 */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; overflow-y: auto; }
         .modal-content { padding: 20px; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .input-group { margin-bottom: 12px; }
+        input, textarea, select { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 16px; box-sizing: border-box; margin-bottom: 10px; }
         label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; }
-        input, textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 16px; box-sizing: border-box; }
         
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; border-top: 0.5px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0 30px 0; }
-        .btn { border: none; padding: 10px 15px; border-radius: 15px; font-weight: bold; cursor: pointer; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; border-top: 0.5px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0 30px 0; z-index: 150; }
+        .btn { border: none; padding: 10px 20px; border-radius: 15px; font-weight: bold; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-sec { background: #e5e5ea; color: #333; }
         
-        /* 隐私警告横幅 */
-        .privacy-banner { background: #fff3cd; color: #856404; padding: 5px 15px; font-size: 11px; text-align: center; }
+        .table-container { overflow-x: auto; background: white; margin: 10px; border-radius: 8px; display: none; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }
+        th, td { border: 0.5px solid #eee; padding: 8px; }
     </style>
 </head>
 <body>
 
-<div class="privacy-banner">⚠️ 数据仅保存在此手机本地，卸载或清除缓存将导致数据丢失</div>
-
 <div class="sticky-header">
     <div class="search-row">
-        <input type="text" id="searchInput" class="search-bar" placeholder="搜索..." oninput="render()">
-        <button onclick="togglePrivacy()" class="btn btn-sec" id="privacyBtn">👁️ 隐私</button>
+        <input type="text" id="searchInput" class="search-bar" placeholder="搜索姓名、床号..." oninput="render()">
+        <button onclick="togglePrivacy()" class="btn btn-sec" id="privacyBtn">👁️</button>
     </div>
 </div>
 
 <div class="view-tabs">
     <div id="tabList" class="tab active" onclick="switchView('list')">病人列表</div>
+    <div id="tabToday" class="tab" onclick="switchView('today')">📅 今日待办汇总</div>
     <div id="tabTable" class="tab" onclick="switchView('table')">汇总表格</div>
     <div class="tab" onclick="openSettings()">⚙️ 备份</div>
 </div>
 
+<!-- 视图 1：病人列表 -->
 <div id="listView" class="patient-list"></div>
 
+<!-- 视图 2：今日待办汇总 -->
+<div id="todayView" class="patient-list" style="display:none;">
+    <h3 style="margin-left:10px;">今日任务 (${new Date().toLocaleDateString()})</h3>
+    <div id="todayTodoList"></div>
+</div>
+
+<!-- 视图 3：汇总表格 -->
 <div id="tableView" class="table-container">
     <table>
         <thead><tr><th>床号</th><th>姓名</th><th>科室</th><th>诊断</th><th>入院日期</th></tr></thead>
@@ -80,42 +84,45 @@
     </table>
 </div>
 
+<!-- 病人详情/编辑模态框 -->
 <div id="modal" class="modal">
     <div class="modal-content">
         <h2 id="modalTitle">病人资料</h2>
-        <div class="grid-inputs">
-            <div class="input-group"><label>床号*</label><input type="text" id="bedNo"></div>
-            <div class="input-group"><label>科室</label><input type="text" id="dept"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div><label>床号*</label><input type="text" id="bedNo"></div>
+            <div><label>姓名*</label><input type="text" id="name"></div>
         </div>
-        <div class="grid-inputs">
-            <div class="input-group"><label>姓名*</label><input type="text" id="name"></div>
-            <div class="input-group"><label>年龄/ID</label><input type="text" id="ageId"></div>
-        </div>
-        <div class="input-group"><label>诊断</label><input type="text" id="diagnosis"></div>
-        <div class="grid-inputs">
-            <div class="input-group"><label>入院日期</label><input type="date" id="dateIn"></div>
-            <div class="input-group"><label>预计出院</label><input type="date" id="datePre"></div>
-        </div>
-        <div class="input-group"><label>目前用药</label><textarea id="meds"></textarea></div>
-        <div class="input-group"><label>治疗计划</label><textarea id="plan"></textarea></div>
-        <div class="input-group"><label>待办事项</label><textarea id="todos"></textarea></div>
+        <label>科室/诊断</label>
+        <input type="text" id="dept" placeholder="科室">
+        <input type="text" id="diagnosis" placeholder="诊断">
         
-        <button class="btn btn-primary" style="width:100%; margin-bottom:10px;" onclick="savePatient()">保存到本地</button>
-        <button class="btn btn-sec" style="width:100%;" onclick="closeModal()">返回</button>
-        <button id="delBtn" style="width:100%; background:none; color:red; border:none; margin-top:20px;" onclick="deletePatient()">删除此病人</button>
+        <div style="background:#f9f9f9; padding:15px; border-radius:10px; margin:15px 0;">
+            <label style="font-weight:bold; color:var(--primary);">待办事项 (每个病人独立管理)</label>
+            <div id="patientTodoList"></div>
+            <div style="display:flex; gap:5px; margin-top:10px;">
+                <input type="text" id="newTodoText" placeholder="新增待办内容..." style="margin-bottom:0;">
+                <button onclick="addTodo()" class="btn btn-primary" style="padding:5px 15px;">添加</button>
+            </div>
+            <input type="date" id="newTodoDate" style="margin-top:5px; font-size:12px;">
+        </div>
+
+        <label>更多资料</label>
+        <textarea id="meds" placeholder="目前用药"></textarea>
+        <textarea id="plan" placeholder="治疗计划"></textarea>
+
+        <button class="btn btn-primary" style="width:100%; margin-bottom:10px;" onclick="savePatient()">保存并返回</button>
+        <button class="btn btn-sec" style="width:100%;" onclick="closeModal()">取消</button>
+        <button id="delBtn" style="width:100%; color:red; border:none; background:none; margin-top:20px;" onclick="deletePatient()">删除病人记录</button>
     </div>
 </div>
 
+<!-- 备份设置 -->
 <div id="settingsModal" class="modal">
     <div class="modal-content">
-        <h2>数据管理</h2>
-        <p style="font-size:13px; color:#666;">数据仅以加密字符串形式存储在手机。你可以导出文本保存到备忘录进行手动云同步。</p>
+        <h2>设置与备份</h2>
         <button class="btn btn-sec" style="width:100%; margin-bottom:10px;" onclick="exportData()">导出数据到剪贴板</button>
         <button class="btn btn-sec" style="width:100%; margin-bottom:10px;" onclick="importData()">从剪贴板导入数据</button>
-        <hr>
-        <button class="btn" style="width:100%; color:red; border:1px solid red;" onclick="clearAll()">彻底清除所有本地数据</button>
-        <br><br>
-        <button class="btn btn-primary" style="width:100%;" onclick="document.getElementById('settingsModal').style.display='none'">关闭</button>
+        <button class="btn btn-primary" style="width:100%;" onclick="document.getElementById('settingsModal').style.display='none'">返回</button>
     </div>
 </div>
 
@@ -125,110 +132,144 @@
 
 <script>
     let patients = JSON.parse(localStorage.getItem('patients') || '[]');
+    let currentEditIndex = -1;
     let isPrivate = false;
-
-    function togglePrivacy() {
-        isPrivate = !isPrivate;
-        document.getElementById('privacyBtn').innerText = isPrivate ? '🙈 隐藏' : '👁️ 隐私';
-        render();
-    }
+    const todayStr = new Date().toISOString().split('T')[0];
 
     function render() {
         const kw = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = patients.filter(p => p.name.includes(kw) || p.bedNo.includes(kw) || p.diagnosis.includes(kw));
+        const filtered = patients.filter(p => p.name.includes(kw) || p.bedNo.includes(kw));
         filtered.sort((a, b) => a.bedNo.localeCompare(b.bedNo));
 
-        const listDiv = document.getElementById('listView');
-        listDiv.innerHTML = filtered.map((p, i) => `
+        // 1. 病人卡片视图
+        document.getElementById('listView').innerHTML = filtered.map((p, i) => `
             <div class="card" onclick="openModal(${patients.indexOf(p)})">
                 <div class="card-row">
                     <span class="${isPrivate ? 'private-blur' : ''}"><b>${p.name}</b></span>
                     <span class="bed-tag">${p.bedNo} 床</span>
                 </div>
-                <div style="font-size:13px; color:#666;">${p.diagnosis}</div>
+                <div style="font-size:13px; color:#666;">${p.diagnosis || '无诊断'}</div>
+                <div class="todo-meta">${(p.todos || []).filter(t => !t.done).length} 项待办未完成</div>
             </div>
         `).join('');
 
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = filtered.map(p => `
-            <tr>
-                <td>${p.bedNo}</td>
-                <td class="${isPrivate ? 'private-blur' : ''}">${p.name}</td>
-                <td>${p.dept}</td>
-                <td>${p.diagnosis}</td>
-                <td>${p.dateIn}</td>
-            </tr>
+        // 2. 今日待办汇总视图
+        let todayAllTodos = [];
+        patients.forEach(p => {
+            (p.todos || []).forEach(t => {
+                if(t.date === todayStr) {
+                    todayAllTodos.push({ ...t, patientName: p.name, bedNo: p.bedNo, patientIdx: patients.indexOf(p) });
+                }
+            });
+        });
+
+        document.getElementById('todayTodoList').innerHTML = todayAllTodos.length > 0 ? 
+            todayAllTodos.map((t, i) => `
+                <div class="card">
+                    <div class="todo-item ${t.done ? 'done' : ''}">
+                        <div class="check-box ${t.done ? 'checked' : ''}" onclick="event.stopPropagation(); toggleTodo(${t.patientIdx}, '${t.id}')"></div>
+                        <div class="todo-text">
+                            <span style="font-size:12px; color:var(--primary);">${t.bedNo}床 ${isPrivate ? '***' : t.patientName}</span><br>
+                            ${t.text}
+                        </div>
+                    </div>
+                </div>
+            `).join('') : '<p style="text-align:center; color:#999;">今日无待办任务</p>';
+
+        // 3. 表格视图
+        document.getElementById('tableBody').innerHTML = filtered.map(p => `
+            <tr><td>${p.bedNo}</td><td class="${isPrivate ? 'private-blur' : ''}">${p.name}</td><td>${p.dept}</td><td>${p.diagnosis}</td><td>${p.dateIn || '-'}</td></tr>
         `).join('');
     }
 
     function switchView(view) {
-        document.getElementById('listView').style.display = view === 'list' ? 'block' : 'none';
-        document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
-        document.getElementById('tabList').className = 'tab' + (view === 'list' ? ' active' : '');
-        document.getElementById('tabTable').className = 'tab' + (view === 'table' ? ' active' : '');
+        ['listView', 'todayView', 'tableView'].forEach(id => document.getElementById(id).style.display = 'none');
+        ['tabList', 'tabToday', 'tabTable'].forEach(id => document.getElementById(id).className = 'tab');
+        
+        if(view === 'list') { document.getElementById('listView').style.display = 'block'; document.getElementById('tabList').className = 'tab active'; }
+        if(view === 'today') { document.getElementById('todayView').style.display = 'block'; document.getElementById('tabToday').className = 'tab active'; }
+        if(view === 'table') { document.getElementById('tableView').style.display = 'block'; document.getElementById('tabTable').className = 'tab active'; }
+        render();
     }
 
     function openModal(index = -1) {
         currentEditIndex = index;
         document.getElementById('modal').style.display = 'block';
-        const fields = ['bedNo','dept','name','ageId','diagnosis','dateIn','datePre','meds','plan','todos'];
+        document.getElementById('newTodoDate').value = todayStr;
+        
+        const fields = ['bedNo','dept','name','diagnosis','meds','plan'];
         if (index > -1) {
             fields.forEach(f => document.getElementById(f).value = patients[index][f] || '');
+            renderPatientTodos();
             document.getElementById('delBtn').style.display = 'block';
         } else {
             fields.forEach(f => document.getElementById(f).value = '');
+            document.getElementById('patientTodoList').innerHTML = '';
             document.getElementById('delBtn').style.display = 'none';
         }
     }
 
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    function renderPatientTodos() {
+        const p = patients[currentEditIndex];
+        const todoDiv = document.getElementById('patientTodoList');
+        todoDiv.innerHTML = (p.todos || []).map(t => `
+            <div class="todo-item ${t.done ? 'done' : ''}">
+                <div class="check-box ${t.done ? 'checked' : ''}" onclick="toggleTodo(${currentEditIndex}, '${t.id}')"></div>
+                <div class="todo-text">${t.text} <span class="todo-meta">(${t.date})</span></div>
+                <span onclick="removeTodo('${t.id}')" style="color:red; font-size:12px;">删除</span>
+            </div>
+        `).join('');
+    }
+
+    function addTodo() {
+        const text = document.getElementById('newTodoText').value;
+        const date = document.getElementById('newTodoDate').value;
+        if(!text) return;
+        
+        if(currentEditIndex === -1) { alert("请先保存病人基本信息"); return; }
+
+        const newTodo = { id: Date.now().toString(), text, date, done: false };
+        if(!patients[currentEditIndex].todos) patients[currentEditIndex].todos = [];
+        patients[currentEditIndex].todos.push(newTodo);
+        document.getElementById('newTodoText').value = '';
+        saveData();
+        renderPatientTodos();
+    }
+
+    function toggleTodo(pIdx, todoId) {
+        const todo = patients[pIdx].todos.find(t => t.id === todoId);
+        if(todo) {
+            todo.done = !todo.done;
+            saveData();
+            if(currentEditIndex !== -1) renderPatientTodos();
+            render();
+        }
+    }
+
+    function removeTodo(todoId) {
+        patients[currentEditIndex].todos = patients[currentEditIndex].todos.filter(t => t.id !== todoId);
+        saveData();
+        renderPatientTodos();
+    }
 
     function savePatient() {
-        const p = {};
-        ['bedNo','dept','name','ageId','diagnosis','dateIn','datePre','meds','plan','todos'].forEach(f => {
-            p[f] = document.getElementById(f).value;
-        });
-        if (!p.name || !p.bedNo) return alert('必填未填');
-        if (currentEditIndex > -1) patients[currentEditIndex] = p;
-        else patients.push(p);
-        localStorage.setItem('patients', JSON.stringify(patients));
-        render();
+        const p = currentEditIndex > -1 ? patients[currentEditIndex] : { todos: [] };
+        ['bedNo','dept','name','diagnosis','meds','plan'].forEach(f => p[f] = document.getElementById(f).value);
+        if (!p.name || !p.bedNo) return alert('必填项缺失');
+        
+        if (currentEditIndex === -1) patients.push(p);
+        saveData();
         closeModal();
+        render();
     }
 
-    function deletePatient() {
-        if(confirm('确定删除？')) {
-            patients.splice(currentEditIndex, 1);
-            localStorage.setItem('patients', JSON.stringify(patients));
-            render(); closeModal();
-        }
-    }
-
+    function deletePatient() { if(confirm('确认删除？')) { patients.splice(currentEditIndex, 1); saveData(); closeModal(); render(); } }
+    function saveData() { localStorage.setItem('patients', JSON.stringify(patients)); }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    function togglePrivacy() { isPrivate = !isPrivate; render(); }
     function openSettings() { document.getElementById('settingsModal').style.display = 'block'; }
-
-    function exportData() {
-        const data = localStorage.getItem('patients');
-        navigator.clipboard.writeText(data);
-        alert('加密数据已复制到剪贴板，请去备忘录粘贴保存。');
-    }
-
-    function importData() {
-        const data = prompt('请粘贴以前导出的数据字符串：');
-        if (data) {
-            localStorage.setItem('patients', data);
-            patients = JSON.parse(data);
-            render();
-            alert('导入成功！');
-        }
-    }
-
-    function clearAll() {
-        if(confirm('警告：这将永久删除手机上存储的所有病人资料！')) {
-            localStorage.clear();
-            patients = [];
-            render();
-        }
-    }
+    function exportData() { navigator.clipboard.writeText(localStorage.getItem('patients')); alert('已复制'); }
+    function importData() { const d = prompt('粘贴数据'); if(d){ localStorage.setItem('patients', d); location.reload(); } }
 
     render();
 </script>
