@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="zh-CN"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;MedManager Pro&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-status-bar-style" content="default"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>:root { --primary: #007aff; --bg: #f2f2f7; --card: #ffffff; --border: #d1d1d6; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: -apple-system, system-ui; background: var(--bg); margin: 0; padding-bottom: 100px; }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 顶部固定栏 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.sticky-header {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: sticky; top: 0; background: rgba(255,255,255,0.9);<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>backdrop-filter: blur(10px); z-index: 100; border-bottom: 0.5px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 10px 15px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.search-bar {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 100%; border: none; background: #e3e3e8; padding: 8px 12px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 10px; font-size: 16px; box-sizing: border-box; outline: none;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 视图切换按钮 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.view-tabs { display: flex; padding: 10px 15px; gap: 10px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tab {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>flex: 1; padding: 8px; text-align: center; background: #ddd;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 8px; font-size: 14px; cursor: pointer;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tab.active { background: var(--primary); color: white; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 卡片样式 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.patient-list { padding: 10px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 1px 3px rgba(0,0,0,0.1);<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.card-row { display: flex; justify-content: space-between; margin-bottom: 5px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.bed-tag { background: #5856d6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.dept-tag { color: var(--primary); font-size: 12px; font-weight: bold; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 表格样式 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.table-container { overflow-x: auto; background: white; margin: 10px; border-radius: 8px; display: none; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>th, td { border: 0.5px solid #eee; padding: 10px; text-align: left; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>th { background: #f9f9f9; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 模态框 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; overflow-y: auto; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.modal-content { padding: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.input-group { margin-bottom: 12px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>label { display: block; font-size: 12px; color: #666; margin-bottom: 4px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>input, textarea, select {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 100%; border: 1px solid var(--border); border-radius: 8px;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 10px; font-size: 16px; box-sizing: border-box;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 底部导航 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.bottom-nav {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: fixed; bottom: 0; width: 100%; background: white;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-top: 0.5px solid var(--border); display: flex;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>justify-content: space-around; padding: 10px 0; padding-bottom: 30px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.add-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="sticky-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="text" id="searchInput" class="search-bar" placeholder="搜索姓名、床号、科室或诊断..." oninput="filterData()"&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="view-tabs"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="tabList" class="tab active" onclick="switchView('list')"&gt;卡片视图&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="tabTable" class="tab" onclick="switchView('table')"&gt;汇总表格&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- 卡片列表视图 --&gt;</p>
+<p class="p1">&lt;div id="listView" class="patient-list"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- 汇总表格视图 --&gt;</p>
+<p class="p1">&lt;div id="tableView" class="table-container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;table&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;thead&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;th&gt;床号&lt;/th&gt;&lt;th&gt;姓名&lt;/th&gt;&lt;th&gt;科室&lt;/th&gt;&lt;th&gt;诊断&lt;/th&gt;&lt;th&gt;入院日期&lt;/th&gt;&lt;th&gt;预计出院&lt;/th&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/thead&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;tbody id="tableBody"&gt;&lt;/tbody&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/table&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- 新增/编辑模态框 --&gt;</p>
+<p class="p1">&lt;div id="modal" class="modal"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="modal-content"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2 id="modalTitle"&gt;病人信息&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grid-inputs"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;床号*&lt;/label&gt;&lt;input type="text" id="bedNo"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;科室&lt;/label&gt;&lt;input type="text" id="dept"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grid-inputs"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;姓名*&lt;/label&gt;&lt;input type="text" id="name"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;年龄/ID&lt;/label&gt;&lt;input type="text" id="ageId"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;&lt;label&gt;诊断&lt;/label&gt;&lt;input type="text" id="diagnosis"&gt;&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="grid-inputs"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;入院日期&lt;/label&gt;&lt;input type="date" id="dateIn"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;预计出院&lt;/label&gt;&lt;input type="date" id="datePre"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;&lt;label&gt;实际出院&lt;/label&gt;&lt;input type="date" id="dateOut"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;&lt;label&gt;目前用药&lt;/label&gt;&lt;textarea id="meds"&gt;&lt;/textarea&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;&lt;label&gt;治疗计划&lt;/label&gt;&lt;textarea id="plan"&gt;&lt;/textarea&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;&lt;label&gt;操作 / 手术&lt;/label&gt;&lt;input type="text" id="procedure"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;&lt;label&gt;待办事项&lt;/label&gt;&lt;textarea id="todos"&gt;&lt;/textarea&gt;&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="add-btn" style="width:100%; margin-bottom:10px;" onclick="savePatient()"&gt;保存&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="add-btn" style="width:100%; background:#8e8e93;" onclick="closeModal()"&gt;取消&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="delBtn" style="width:100%; background:#ff3b30; color:white; border:none; padding:10px; margin-top:20px; border-radius:10px; display:none;" onclick="deletePatient()"&gt;删除记录&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="bottom-nav"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="add-btn" onclick="openModal()"&gt;＋ 新增病人&lt;/button&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let patients = JSON.parse(localStorage.getItem('patients') || '[]');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let currentEditIndex = -1;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let currentView = 'list';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function render() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const keyword = document.getElementById('searchInput').value.toLowerCase();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const filtered = patients.filter(p =&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>p.name.toLowerCase().includes(keyword) ||<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>p.bedNo.toLowerCase().includes(keyword) ||<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>p.dept.toLowerCase().includes(keyword) ||</p>
+<p class="p1"><span class="Apple-converted-space">            </span>p.diagnosis.toLowerCase().includes(keyword)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 按床号排序</p>
+<p class="p1"><span class="Apple-converted-space">        </span>filtered.sort((a, b) =&gt; a.bedNo.localeCompare(b.bedNo));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>renderList(filtered);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>renderTable(filtered);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function renderList(data) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const listDiv = document.getElementById('listView');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>listDiv.innerHTML = data.map((p, index) =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card" onclick="openModal(${patients.indexOf(p)})"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="card-row"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="patient-name"&gt;&lt;b&gt;${p.name}&lt;/b&gt; &lt;small&gt;${p.ageId}&lt;/small&gt;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="bed-tag"&gt;${p.bedNo} 床&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="card-row"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="dept-tag"&gt;${p.dept || '未填科室'}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span style="font-size:12px; color:#666;"&gt;入: ${p.dateIn || '-'}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div style="font-size:14px; margin-top:5px; color:#333;"&gt;诊: ${p.diagnosis}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>`).join('');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function renderTable(data) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const tbody = document.getElementById('tableBody');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>tbody.innerHTML = data.map(p =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;td&gt;${p.bedNo}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;td&gt;${p.name}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;td&gt;${p.dept}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;td&gt;${p.diagnosis}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;td&gt;${p.dateIn}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;td&gt;${p.datePre}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>`).join('');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function switchView(view) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>currentView = view;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('listView').style.display = view === 'list' ? 'block' : 'none';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('tabList').className = 'tab' + (view === 'list' ? ' active' : '');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('tabTable').className = 'tab' + (view === 'table' ? ' active' : '');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function filterData() { render(); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function openModal(index = -1) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>currentEditIndex = index;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('modal').style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const fields = ['bedNo','dept','name','ageId','diagnosis','dateIn','datePre','dateOut','meds','plan','procedure','todos'];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (index &gt; -1) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const p = patients[index];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>fields.forEach(f =&gt; document.getElementById(f).value = p[f] || '');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('delBtn').style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>fields.forEach(f =&gt; document.getElementById(f).value = '');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('delBtn').style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function closeModal() { document.getElementById('modal').style.display = 'none'; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function savePatient() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const p = {};</p>
+<p class="p1"><span class="Apple-converted-space">        </span>['bedNo','dept','name','ageId','diagnosis','dateIn','datePre','dateOut','meds','plan','procedure','todos'].forEach(f =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>p[f] = document.getElementById(f).value;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!p.name || !p.bedNo) return alert('姓名和床号必填');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (currentEditIndex &gt; -1) patients[currentEditIndex] = p;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>else patients.push(p);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>localStorage.setItem('patients', JSON.stringify(patients));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>render();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>closeModal();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function deletePatient() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (confirm('确认删除？')) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>patients.splice(currentEditIndex, 1);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>localStorage.setItem('patients', JSON.stringify(patients));</p>
+<p class="p1"><span class="Apple-converted-space">            </span>render();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>closeModal();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// 初始渲染</p>
+<p class="p1"><span class="Apple-converted-space">    </span>render();</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
