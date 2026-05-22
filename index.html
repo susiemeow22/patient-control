@@ -1,253 +1,236 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MedManager (Local Only)</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <style>
+        :root { --primary: #007aff; --bg: #f2f2f7; --card: #ffffff; --border: #d1d1d6; }
+        body { font-family: -apple-system, system-ui; background: var(--bg); margin: 0; padding-bottom: 100px; }
+        
+        .sticky-header { 
+            position: sticky; top: 0; background: rgba(255,255,255,0.9); 
+            backdrop-filter: blur(10px); z-index: 100; border-bottom: 0.5px solid var(--border);
+            padding: 10px 15px;
+        }
+        .search-row { display: flex; gap: 10px; align-items: center; }
+        .search-bar {
+            flex: 1; border: none; background: #e3e3e8; padding: 8px 12px;
+            border-radius: 10px; font-size: 16px; outline: none;
+        }
+
+        .view-tabs { display: flex; padding: 10px 15px; gap: 10px; }
+        .tab { flex: 1; padding: 8px; text-align: center; background: #ddd; border-radius: 8px; font-size: 14px; }
+        .tab.active { background: var(--primary); color: white; }
+
+        /* 隐私保护样式 */
+        .private-blur { filter: blur(5px); transition: 0.3s; }
+        .private-blur:active { filter: blur(0); } /* 点击时临时显示 */
+
+        .patient-list { padding: 10px; }
+        .card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .bed-tag { background: #5856d6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+
+        .table-container { overflow-x: auto; background: white; margin: 10px; border-radius: 8px; display: none; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }
+        th, td { border: 0.5px solid #eee; padding: 8px; text-align: left; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; overflow-y: auto; }
+        .modal-content { padding: 20px; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .input-group { margin-bottom: 12px; }
+        label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; }
+        input, textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 16px; box-sizing: border-box; }
+        
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; border-top: 0.5px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0 30px 0; }
+        .btn { border: none; padding: 10px 15px; border-radius: 15px; font-weight: bold; cursor: pointer; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-sec { background: #e5e5ea; color: #333; }
+        
+        /* 隐私警告横幅 */
+        .privacy-banner { background: #fff3cd; color: #856404; padding: 5px 15px; font-size: 11px; text-align: center; }
+    </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="zh-CN"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;MedManager (Local Only)&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-status-bar-style" content="default"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>:root { --primary: #007aff; --bg: #f2f2f7; --card: #ffffff; --border: #d1d1d6; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body { font-family: -apple-system, system-ui; background: var(--bg); margin: 0; padding-bottom: 100px; }</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.sticky-header {<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>position: sticky; top: 0; background: rgba(255,255,255,0.9);<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>backdrop-filter: blur(10px); z-index: 100; border-bottom: 0.5px solid var(--border);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 10px 15px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.search-row { display: flex; gap: 10px; align-items: center; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.search-bar {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>flex: 1; border: none; background: #e3e3e8; padding: 8px 12px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 10px; font-size: 16px; outline: none;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.view-tabs { display: flex; padding: 10px 15px; gap: 10px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.tab { flex: 1; padding: 8px; text-align: center; background: #ddd; border-radius: 8px; font-size: 14px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.tab.active { background: var(--primary); color: white; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>/* 隐私保护样式 */</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.private-blur { filter: blur(5px); transition: 0.3s; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.private-blur:active { filter: blur(0); } /* 点击时临时显示 */</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.patient-list { padding: 10px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.card-row { display: flex; justify-content: space-between; margin-bottom: 5px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.bed-tag { background: #5856d6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.table-container { overflow-x: auto; background: white; margin: 10px; border-radius: 8px; display: none; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>th, td { border: 0.5px solid #eee; padding: 8px; text-align: left; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 200; overflow-y: auto; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.modal-content { padding: 20px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.input-group { margin-bottom: 12px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>input, textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 16px; box-sizing: border-box; }</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; border-top: 0.5px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0 30px 0; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.btn { border: none; padding: 10px 15px; border-radius: 15px; font-weight: bold; cursor: pointer; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.btn-primary { background: var(--primary); color: white; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.btn-sec { background: #e5e5ea; color: #333; }</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>/* 隐私警告横幅 */</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.privacy-banner { background: #fff3cd; color: #856404; padding: 5px 15px; font-size: 11px; text-align: center; }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;div class="privacy-banner"&gt;⚠️ 数据仅保存在此手机本地，卸载或清除缓存将导致数据丢失&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;div class="sticky-header"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="search-row"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;input type="text" id="searchInput" class="search-bar" placeholder="搜索..." oninput="render()"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button onclick="togglePrivacy()" class="btn btn-sec" id="privacyBtn"&gt;👁️ 隐私&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;div class="view-tabs"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="tabList" class="tab active" onclick="switchView('list')"&gt;病人列表&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="tabTable" class="tab" onclick="switchView('table')"&gt;汇总表格&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="tab" onclick="openSettings()"&gt;⚙️ 备份&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;div id="listView" class="patient-list"&gt;&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;div id="tableView" class="table-container"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;table&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;thead&gt;&lt;tr&gt;&lt;th&gt;床号&lt;/th&gt;&lt;th&gt;姓名&lt;/th&gt;&lt;th&gt;科室&lt;/th&gt;&lt;th&gt;诊断&lt;/th&gt;&lt;th&gt;入院日期&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;tbody id="tableBody"&gt;&lt;/tbody&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/table&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;div id="modal" class="modal"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="modal-content"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;h2 id="modalTitle"&gt;病人资料&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="grid-inputs"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;床号*&lt;/label&gt;&lt;input type="text" id="bedNo"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;科室&lt;/label&gt;&lt;input type="text" id="dept"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="grid-inputs"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;姓名*&lt;/label&gt;&lt;input type="text" id="name"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;年龄/ID&lt;/label&gt;&lt;input type="text" id="ageId"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;&lt;label&gt;诊断&lt;/label&gt;&lt;input type="text" id="diagnosis"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="grid-inputs"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;入院日期&lt;/label&gt;&lt;input type="date" id="dateIn"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="input-group"&gt;&lt;label&gt;预计出院&lt;/label&gt;&lt;input type="date" id="datePre"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;&lt;label&gt;目前用药&lt;/label&gt;&lt;textarea id="meds"&gt;&lt;/textarea&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;&lt;label&gt;治疗计划&lt;/label&gt;&lt;textarea id="plan"&gt;&lt;/textarea&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;&lt;label&gt;待办事项&lt;/label&gt;&lt;textarea id="todos"&gt;&lt;/textarea&gt;&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-primary" style="width:100%; margin-bottom:10px;" onclick="savePatient()"&gt;保存到本地&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-sec" style="width:100%;" onclick="closeModal()"&gt;返回&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button id="delBtn" style="width:100%; background:none; color:red; border:none; margin-top:20px;" onclick="deletePatient()"&gt;删除此病人&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;div id="settingsModal" class="modal"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="modal-content"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;h2&gt;数据管理&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p style="font-size:13px; color:#666;"&gt;数据仅以加密字符串形式存储在手机。你可以导出文本保存到备忘录进行手动云同步。&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-sec" style="width:100%; margin-bottom:10px;" onclick="exportData()"&gt;导出数据到剪贴板&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-sec" style="width:100%; margin-bottom:10px;" onclick="importData()"&gt;从剪贴板导入数据&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;hr&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button class="btn" style="width:100%; color:red; border:1px solid red;" onclick="clearAll()"&gt;彻底清除所有本地数据&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;br&gt;&lt;br&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-primary" style="width:100%;" onclick="document.getElementById('settingsModal').style.display='none'"&gt;关闭&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;div class="bottom-nav"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;button class="btn btn-primary" onclick="openModal()"&gt;＋ 新增病人&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>let patients = JSON.parse(localStorage.getItem('patients') || '[]');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>let isPrivate = false;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function togglePrivacy() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>isPrivate = !isPrivate;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.getElementById('privacyBtn').innerText = isPrivate ? '🙈 隐藏' : '👁️ 隐私';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>render();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function render() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const kw = document.getElementById('searchInput').value.toLowerCase();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const filtered = patients.filter(p =&gt; p.name.includes(kw) || p.bedNo.includes(kw) || p.diagnosis.includes(kw));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>filtered.sort((a, b) =&gt; a.bedNo.localeCompare(b.bedNo));</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const listDiv = document.getElementById('listView');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>listDiv.innerHTML = filtered.map((p, i) =&gt; `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="card" onclick="openModal(${patients.indexOf(p)})"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="card-row"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span class="${isPrivate ? 'private-blur' : ''}"&gt;&lt;b&gt;${p.name}&lt;/b&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span class="bed-tag"&gt;${p.bedNo} 床&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div style="font-size:13px; color:#666;"&gt;${p.diagnosis}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>`).join('');</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const tbody = document.getElementById('tableBody');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>tbody.innerHTML = filtered.map(p =&gt; `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;tr&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;td&gt;${p.bedNo}&lt;/td&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;td class="${isPrivate ? 'private-blur' : ''}"&gt;${p.name}&lt;/td&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;td&gt;${p.dept}&lt;/td&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;td&gt;${p.diagnosis}&lt;/td&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;td&gt;${p.dateIn}&lt;/td&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/tr&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>`).join('');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function switchView(view) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.getElementById('listView').style.display = view === 'list' ? 'block' : 'none';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.getElementById('tabList').className = 'tab' + (view === 'list' ? ' active' : '');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.getElementById('tabTable').className = 'tab' + (view === 'table' ? ' active' : '');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function openModal(index = -1) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>currentEditIndex = index;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.getElementById('modal').style.display = 'block';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const fields = ['bedNo','dept','name','ageId','diagnosis','dateIn','datePre','meds','plan','todos'];</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (index &gt; -1) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>fields.forEach(f =&gt; document.getElementById(f).value = patients[index][f] || '');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('delBtn').style.display = 'block';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>} else {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>fields.forEach(f =&gt; document.getElementById(f).value = '');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('delBtn').style.display = 'none';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function closeModal() { document.getElementById('modal').style.display = 'none'; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function savePatient() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const p = {};</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>['bedNo','dept','name','ageId','diagnosis','dateIn','datePre','meds','plan','todos'].forEach(f =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>p[f] = document.getElementById(f).value;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (!p.name || !p.bedNo) return alert('必填未填');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (currentEditIndex &gt; -1) patients[currentEditIndex] = p;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>else patients.push(p);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>localStorage.setItem('patients', JSON.stringify(patients));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>render();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>closeModal();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function deletePatient() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if(confirm('确定删除？')) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>patients.splice(currentEditIndex, 1);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>localStorage.setItem('patients', JSON.stringify(patients));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>render(); closeModal();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function openSettings() { document.getElementById('settingsModal').style.display = 'block'; }</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function exportData() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const data = localStorage.getItem('patients');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>navigator.clipboard.writeText(data);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>alert('加密数据已复制到剪贴板，请去备忘录粘贴保存。');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function importData() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const data = prompt('请粘贴以前导出的数据字符串：');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if (data) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>localStorage.setItem('patients', data);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>patients = JSON.parse(data);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>render();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>alert('导入成功！');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>function clearAll() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>if(confirm('警告：这将永久删除手机上存储的所有病人资料！')) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>localStorage.clear();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>patients = [];</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>render();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>render();</span></p>
-<p class="p1"><span class="s1">&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+
+<div class="privacy-banner">⚠️ 数据仅保存在此手机本地，卸载或清除缓存将导致数据丢失</div>
+
+<div class="sticky-header">
+    <div class="search-row">
+        <input type="text" id="searchInput" class="search-bar" placeholder="搜索..." oninput="render()">
+        <button onclick="togglePrivacy()" class="btn btn-sec" id="privacyBtn">👁️ 隐私</button>
+    </div>
+</div>
+
+<div class="view-tabs">
+    <div id="tabList" class="tab active" onclick="switchView('list')">病人列表</div>
+    <div id="tabTable" class="tab" onclick="switchView('table')">汇总表格</div>
+    <div class="tab" onclick="openSettings()">⚙️ 备份</div>
+</div>
+
+<div id="listView" class="patient-list"></div>
+
+<div id="tableView" class="table-container">
+    <table>
+        <thead><tr><th>床号</th><th>姓名</th><th>科室</th><th>诊断</th><th>入院日期</th></tr></thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle">病人资料</h2>
+        <div class="grid-inputs">
+            <div class="input-group"><label>床号*</label><input type="text" id="bedNo"></div>
+            <div class="input-group"><label>科室</label><input type="text" id="dept"></div>
+        </div>
+        <div class="grid-inputs">
+            <div class="input-group"><label>姓名*</label><input type="text" id="name"></div>
+            <div class="input-group"><label>年龄/ID</label><input type="text" id="ageId"></div>
+        </div>
+        <div class="input-group"><label>诊断</label><input type="text" id="diagnosis"></div>
+        <div class="grid-inputs">
+            <div class="input-group"><label>入院日期</label><input type="date" id="dateIn"></div>
+            <div class="input-group"><label>预计出院</label><input type="date" id="datePre"></div>
+        </div>
+        <div class="input-group"><label>目前用药</label><textarea id="meds"></textarea></div>
+        <div class="input-group"><label>治疗计划</label><textarea id="plan"></textarea></div>
+        <div class="input-group"><label>待办事项</label><textarea id="todos"></textarea></div>
+        
+        <button class="btn btn-primary" style="width:100%; margin-bottom:10px;" onclick="savePatient()">保存到本地</button>
+        <button class="btn btn-sec" style="width:100%;" onclick="closeModal()">返回</button>
+        <button id="delBtn" style="width:100%; background:none; color:red; border:none; margin-top:20px;" onclick="deletePatient()">删除此病人</button>
+    </div>
+</div>
+
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <h2>数据管理</h2>
+        <p style="font-size:13px; color:#666;">数据仅以加密字符串形式存储在手机。你可以导出文本保存到备忘录进行手动云同步。</p>
+        <button class="btn btn-sec" style="width:100%; margin-bottom:10px;" onclick="exportData()">导出数据到剪贴板</button>
+        <button class="btn btn-sec" style="width:100%; margin-bottom:10px;" onclick="importData()">从剪贴板导入数据</button>
+        <hr>
+        <button class="btn" style="width:100%; color:red; border:1px solid red;" onclick="clearAll()">彻底清除所有本地数据</button>
+        <br><br>
+        <button class="btn btn-primary" style="width:100%;" onclick="document.getElementById('settingsModal').style.display='none'">关闭</button>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <button class="btn btn-primary" onclick="openModal()">＋ 新增病人</button>
+</div>
+
+<script>
+    let patients = JSON.parse(localStorage.getItem('patients') || '[]');
+    let isPrivate = false;
+
+    function togglePrivacy() {
+        isPrivate = !isPrivate;
+        document.getElementById('privacyBtn').innerText = isPrivate ? '🙈 隐藏' : '👁️ 隐私';
+        render();
+    }
+
+    function render() {
+        const kw = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = patients.filter(p => p.name.includes(kw) || p.bedNo.includes(kw) || p.diagnosis.includes(kw));
+        filtered.sort((a, b) => a.bedNo.localeCompare(b.bedNo));
+
+        const listDiv = document.getElementById('listView');
+        listDiv.innerHTML = filtered.map((p, i) => `
+            <div class="card" onclick="openModal(${patients.indexOf(p)})">
+                <div class="card-row">
+                    <span class="${isPrivate ? 'private-blur' : ''}"><b>${p.name}</b></span>
+                    <span class="bed-tag">${p.bedNo} 床</span>
+                </div>
+                <div style="font-size:13px; color:#666;">${p.diagnosis}</div>
+            </div>
+        `).join('');
+
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = filtered.map(p => `
+            <tr>
+                <td>${p.bedNo}</td>
+                <td class="${isPrivate ? 'private-blur' : ''}">${p.name}</td>
+                <td>${p.dept}</td>
+                <td>${p.diagnosis}</td>
+                <td>${p.dateIn}</td>
+            </tr>
+        `).join('');
+    }
+
+    function switchView(view) {
+        document.getElementById('listView').style.display = view === 'list' ? 'block' : 'none';
+        document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
+        document.getElementById('tabList').className = 'tab' + (view === 'list' ? ' active' : '');
+        document.getElementById('tabTable').className = 'tab' + (view === 'table' ? ' active' : '');
+    }
+
+    function openModal(index = -1) {
+        currentEditIndex = index;
+        document.getElementById('modal').style.display = 'block';
+        const fields = ['bedNo','dept','name','ageId','diagnosis','dateIn','datePre','meds','plan','todos'];
+        if (index > -1) {
+            fields.forEach(f => document.getElementById(f).value = patients[index][f] || '');
+            document.getElementById('delBtn').style.display = 'block';
+        } else {
+            fields.forEach(f => document.getElementById(f).value = '');
+            document.getElementById('delBtn').style.display = 'none';
+        }
+    }
+
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    function savePatient() {
+        const p = {};
+        ['bedNo','dept','name','ageId','diagnosis','dateIn','datePre','meds','plan','todos'].forEach(f => {
+            p[f] = document.getElementById(f).value;
+        });
+        if (!p.name || !p.bedNo) return alert('必填未填');
+        if (currentEditIndex > -1) patients[currentEditIndex] = p;
+        else patients.push(p);
+        localStorage.setItem('patients', JSON.stringify(patients));
+        render();
+        closeModal();
+    }
+
+    function deletePatient() {
+        if(confirm('确定删除？')) {
+            patients.splice(currentEditIndex, 1);
+            localStorage.setItem('patients', JSON.stringify(patients));
+            render(); closeModal();
+        }
+    }
+
+    function openSettings() { document.getElementById('settingsModal').style.display = 'block'; }
+
+    function exportData() {
+        const data = localStorage.getItem('patients');
+        navigator.clipboard.writeText(data);
+        alert('加密数据已复制到剪贴板，请去备忘录粘贴保存。');
+    }
+
+    function importData() {
+        const data = prompt('请粘贴以前导出的数据字符串：');
+        if (data) {
+            localStorage.setItem('patients', data);
+            patients = JSON.parse(data);
+            render();
+            alert('导入成功！');
+        }
+    }
+
+    function clearAll() {
+        if(confirm('警告：这将永久删除手机上存储的所有病人资料！')) {
+            localStorage.clear();
+            patients = [];
+            render();
+        }
+    }
+
+    render();
+</script>
 </body>
 </html>
